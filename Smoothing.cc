@@ -96,6 +96,14 @@ void Smoothing::implicit_smooth(const double _timestep) {
 // ========================================================================
 void Smoothing::uniform_laplacian_enhance_feature(const int _iterations, const int _coefficient) {
     // ------------- IMPLEMENT HERE ---------
+    auto mesh_old_ = mesh_;
+    uniform_smooth(_iterations);
+
+    for(auto vh : mesh_.vertices()){
+        if(!mesh_.is_boundary(vh)){
+            mesh_.point(vh) = mesh_.point(vh)+_coefficient*(mesh_old_.point(vh)-mesh_.point(vh));
+        }
+    }
 
     // ------------- IMPLEMENT HERE ---------
     mesh_.update_normals();
@@ -106,7 +114,14 @@ void Smoothing::uniform_laplacian_enhance_feature(const int _iterations, const i
 // ========================================================================
 void Smoothing::cotan_laplacian_enhance_feature(const int _iterations, const int _coefficient) {
     // ------------- IMPLEMENT HERE ---------
+    auto mesh_old_ = mesh_;
+    cotan_laplacian_smooth(_iterations);
 
+    for(auto vh : mesh_.vertices()){
+        if(!mesh_.is_boundary(vh)){
+            mesh_.point(vh) = mesh_.point(vh)+_coefficient*(mesh_old_.point(vh)-mesh_.point(vh));
+        }
+    }
     // ------------- IMPLEMENT HERE ---------
     mesh_.update_normals();
 }
